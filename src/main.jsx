@@ -9,6 +9,7 @@ import LoginUser from './pages/UserPages/LoginUser.jsx'
 import Context from './context/ContextProvider.jsx'
 import UpdateUser from './pages/UserPages/UpdateUser.jsx'
 import Home from './pages/Home.jsx'
+import LoguutUser from './pages/UserPages/LogoutUser.jsx'
 
 const theme = createTheme({
   palette : {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
   {
     path : "/login-user",
     element : <LoginUser/>
+  },
+  {
+    path : "/logout-user",
+    element : <LoguutUser/>
   },
   {
     path : "/update-user",

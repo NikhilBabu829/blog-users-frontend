@@ -1,8 +1,10 @@
 import {Box,Container,TextField,Typography,Button,Card,CardContent, Snackbar} from "@mui/material";
+import { useEffect } from "react";
+import Loading from "./Loading";
 
 export default function UserForm({handleSubmit, formData, handleSnackBarOnClose, setFormData, displaySnackBar, formType, snackBarMsg, currentUser}){
-  
-  return (
+    return (
+    <>
     <Container
       maxWidth="lg"
       sx={{
@@ -29,24 +31,25 @@ export default function UserForm({handleSubmit, formData, handleSnackBarOnClose,
             handleSubmit();
           }}>
             { 
-              Object.keys(currentUser).length > 0 ? (
+              ( typeof currentUser == "object" && Object.keys(currentUser).length <= 0) || (currentUser==null) || (currentUser==undefined) ? (
+                <TextField
+                    id="username"
+                    label="Username"
+                    variant="filled"
+                    size="small"
+                    type="text"
+                    fullWidth
+                    required
+                    sx={{ display: "block", marginBottom: "5%" }}
+                    onChange={(e)=>{
+                      setFormData({username: e.target.value});
+                    }}
+                  />
+              )
+              : (
                 <TextField
                   id="username"
-                  label={currentUser.username}
-                  variant="filled"
-                  size="small"
-                  type="text"
-                  fullWidth
-                  required
-                  sx={{ display: "block", marginBottom: "5%" }}
-                  onChange={(e)=>{
-                    setFormData({username: e.target.value});
-                  }}
-                />
-              ) : (
-                <TextField
-                  id="username"
-                  label="Username"
+                  label={currentUser.user}
                   variant="filled"
                   size="small"
                   type="text"
@@ -91,6 +94,6 @@ export default function UserForm({handleSubmit, formData, handleSnackBarOnClose,
             anchorOrigin = {{vertical : 'bottom', horizontal : 'right'}}
         />
     </Container>
-  );
-
+    </>
+  )
 }

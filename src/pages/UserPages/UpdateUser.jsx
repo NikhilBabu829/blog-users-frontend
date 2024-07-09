@@ -3,6 +3,7 @@ import { ContextProvider } from "../../context/ContextProvider";
 import UserForm from "../../components/UserForm";
 import { Snackbar } from "@mui/material";
 import { Navigate } from "react-router-dom";
+import NavBar from "../../components/NavBar";
 
 export default function UpdateUser(){
 
@@ -10,27 +11,8 @@ export default function UpdateUser(){
     const [displaySnackBar, setSnackBar] = useState(false);
     const [displaySnackBarForError, setSnackBarForError] = useState(false);
     const { currentToken, updateToken, currentUser, setCurrentUser } = useContext(ContextProvider)
-    // const [currentUser, setCurrentUser] = useState({});
 
     const user = localStorage.getItem("user");
-
-    async function getUserFromAPI(){
-        try{
-            const apiUserCall = await fetch(`https://blog-api-odin-52edb7119820.herokuapp.com/api/view-user`, {method : 'GET', headers : {'Content-Type': 'application/json', authorization : `bearer ${JSON.parse(user)}`}});
-            const userResponse = await apiUserCall.json();
-            setCurrentUser(()=> userResponse);
-        }
-        catch(err){
-            
-        }
-    }
-
-    useEffect(()=>{
-        if(user){
-            updateToken(user);
-            getUserFromAPI();
-        }
-    },[])
 
     async function handleSubmit(){
         if(Object.keys(formData).length > 0){            
@@ -46,6 +28,7 @@ export default function UpdateUser(){
 
     return (
         <>
+            <NavBar/>
             {
                 user ? (
                     <>

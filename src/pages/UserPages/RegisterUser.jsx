@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import UserForm from '../../components/UserForm';
+import NavBar from "../../components/NavBar";
 
 export default function RegisterUser(){
 
@@ -20,7 +21,8 @@ export default function RegisterUser(){
 
     return (
         <>
-            <UserForm formData={formData} handleSubmit={handleSubmit} handleSnackBarOnClose={handleSnackBarOnClose} setFormData = {setFormData} displaySnackBar = {displaySnackBar} snackBarMsg={"User registered successfully"}/>
+            <NavBar />
+            <UserForm formData={formData} handleSubmit={handleSubmit} handleSnackBarOnClose={handleSnackBarOnClose} setFormData = {setFormData} formType = "Register" displaySnackBar = {displaySnackBar} snackBarMsg={"User registered successfully"}/>
         </>
     )
 

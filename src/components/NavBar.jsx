@@ -11,20 +11,18 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
-import Home from '../pages/Home';
-import { useTheme } from '@emotion/react';
+import { ContextProvider } from '../context/ContextProvider';
 
-const pages = [  ];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-
-function NavBar() {
+function ResponsiveAppBar() {
+  const { currentUser, updateCurrentUser, currentToken, updateToken, isStillLoggedIn, changeLoggedInStatus} = useContext(ContextProvider)
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
-
-  const currentTheme = useTheme();
-
+  
+  const pages = ['Products', 'Pricing', 'Blog'];
+  const settings = (typeof currentUser == "object" && Object.keys(currentUser).length <= 0) || (currentUser==null) || (currentUser==undefined) ? [ "Login", "Register"] : ['Profile', 'Account', 'Dashboard', 'Logout'];
+  
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -54,9 +52,11 @@ function NavBar() {
               fontFamily: 'monospace',
               fontWeight: 700,
               letterSpacing: '.3rem',
+              color: 'inherit',
+              textDecoration: 'none',
             }}
           >
-            <Link href="/" className='linkToHome' sx={{color : currentTheme.palette.text.primary}}> Daily Drifts </Link>
+            <Link to="/" className='linkToHome'>Daily Drifts</Link>
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -99,8 +99,6 @@ function NavBar() {
           <Typography
             variant="h5"
             noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -112,7 +110,7 @@ function NavBar() {
               textDecoration: 'none',
             }}
           >
-            <Link to="/" className='linkToHome' sx={{color : currentTheme.palette.text.inherit}}> Daily Drifts </Link>
+            <Link to="/" className='linkToHome'>Daily Drifts</Link>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
@@ -129,8 +127,7 @@ function NavBar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Nikhil" src="/static/images/avatar/2.jpg" /> 
-                {/*     //TODO this is the line that is responsible to display the letter on the avatar in the navbar */}
+                <Avatar alt={(typeof currentUser == "object" && Object.keys(currentUser).length <= 0) || (currentUser==null) || (currentUser==undefined)?"User" : currentUser.user} src="/static/images/avatar/2.jpg" />
               </IconButton>
             </Tooltip>
             <Menu
@@ -151,9 +148,10 @@ function NavBar() {
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                  <Link to={`/${setting.toLowerCase()}-user`} className='linkToHome' key={setting}>{setting}</Link>
                 </MenuItem>
-              ))}
+              )
+              )}
             </Menu>
           </Box>
         </Toolbar>
@@ -161,4 +159,4 @@ function NavBar() {
     </AppBar>
   );
 }
-export default NavBar;
+export default ResponsiveAppBar;
