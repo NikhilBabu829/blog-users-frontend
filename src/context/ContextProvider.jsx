@@ -15,36 +15,6 @@ export default function Context({children}){
     const [authorForPosts, setAuthorForPosts] = useState([]);
     const [getComments, setGetComments] = useState([]);
 
-    async function getPostsFromAPI(){
-        try{
-            const apiCall = await fetch("https://blog-api-odin-52edb7119820.herokuapp.com/api/view-posts", {method : "GET", headers : {'Content-Type' : 'application/json'}});
-            const apiData = await apiCall.json();
-            apiData.map((data)=>{
-                const author = getAuthorsFromAPI(data.author);
-            })
-            updatePosts(apiData);
-        }   
-        catch(err){
-            return err
-        }
-    }
-
-    async function getAuthorsFromAPI(id){
-        try{
-            const apiAuthorFetch = await fetch(`https://blog-api-odin-52edb7119820.herokuapp.com/api/view-author/${id}`, {method : "GET", headers : {"Content-Type" : "application/json"}});
-            const apiData = await apiAuthorFetch.json();
-            updateAuthorForPosts(`${apiData.first_name} ${apiData.last_name}`)
-        }catch(err){
-            console.log(err)
-        }
-    }
-
-    
-
-    useEffect(()=>{
-        getPostsFromAPI();
-    },[])
-
     function updateComments(comments){
         setGetComments([comments])
     }
@@ -76,7 +46,7 @@ export default function Context({children}){
     }
 
     return (
-        <ContextProvider.Provider value={{ currentUser, updateCurrentUser, currentToken, updateToken, isStillLoggedIn, changeLoggedInStatus, postsFromAPI, getAuthorsFromAPI, authorForPosts, getComments, updateComments }}>
+        <ContextProvider.Provider value={{ currentUser,updatePosts ,updateCurrentUser, currentToken, updateToken, isStillLoggedIn, changeLoggedInStatus, postsFromAPI, authorForPosts, getComments, updateAuthorForPosts ,updateComments }}>
             {children}
         </ContextProvider.Provider>
     );

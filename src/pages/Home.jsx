@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 
 export default function Home(){
     
-    const { postsFromAPI, authorForPosts, updateComments } = useContext(ContextProvider); 
+    const { postsFromAPI, authorForPosts, updateComments, getComments, updatePosts, updateAuthorForPosts } = useContext(ContextProvider); 
 
     //TODO make a logginIn status state, so that you can display only the things you should when you are logged in 
     //TODO Display all the comments
@@ -33,9 +33,34 @@ export default function Home(){
         }
     }
 
+    async function getPostsFromAPI(){
+        try{
+            const apiCall = await fetch("https://blog-api-odin-52edb7119820.herokuapp.com/api/view-posts", {method : "GET", headers : {'Content-Type' : 'application/json'}});
+            const apiData = await apiCall.json();
+            apiData.map((data)=>{
+                const author = getAuthorsFromAPI(data.author);
+            })
+            updatePosts(apiData);
+        }   
+        catch(err){
+            return err
+        }
+    }
+
+    async function getAuthorsFromAPI(id){
+        try{
+            const apiAuthorFetch = await fetch(`https://blog-api-odin-52edb7119820.herokuapp.com/api/view-author/${id}`, {method : "GET", headers : {"Content-Type" : "application/json"}});
+            const apiData = await apiAuthorFetch.json();
+            updateAuthorForPosts(`${apiData.first_name} ${apiData.last_name}`)
+        }catch(err){
+            console.log(err)
+        }
+    }
+
     useEffect(()=>{
         getCommentsFromAPI()
-    })
+        getPostsFromAPI()
+    },[]);
 
     return(
         <>
