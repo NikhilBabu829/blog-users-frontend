@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ContextProvider } from "../context/ContextProvider";
 import NavBar from "../components/NavBar";
 import Card from '@mui/material/Card';
@@ -14,13 +14,28 @@ import { Link } from "react-router-dom";
 
 export default function Home(){
     
-    const { postsFromAPI, authorForPosts } = useContext(ContextProvider); 
+    const { postsFromAPI, authorForPosts, updateComments } = useContext(ContextProvider); 
 
     //TODO make a logginIn status state, so that you can display only the things you should when you are logged in 
     //TODO Display all the comments
     //TODO give users the ability to edit and delete comments
     //TODO Link your update route to a specific button
     //TODO give user the ability to delete their account
+
+    async function getCommentsFromAPI(){
+        try{
+            const apiCall = await fetch("https://blog-api-odin-52edb7119820.herokuapp.com/api/view-comments", {method : "GET", headers : {'Content-Type': 'application/json'}});
+            const apiData = await apiCall.json();
+            updateComments(apiData);
+        }
+        catch(err){
+            console.log(err);
+        }
+    }
+
+    useEffect(()=>{
+        getCommentsFromAPI()
+    })
 
     return(
         <>

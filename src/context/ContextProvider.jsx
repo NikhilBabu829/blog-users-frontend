@@ -39,20 +39,10 @@ export default function Context({children}){
         }
     }
 
-    async function getCommentsFromAPI(){
-        try{
-            const apiCall = await fetch("https://blog-api-odin-52edb7119820.herokuapp.com/api/view-comments", {method : "GET", headers : {'Content-Type': 'application/json'}});
-            const apiData = await apiCall.json();
-            updateComments(apiData);
-        }
-        catch(err){
-            console.log(err);
-        }
-    }
+    
 
     useEffect(()=>{
-        getPostsFromAPI()
-        getCommentsFromAPI()
+        getPostsFromAPI();
     },[])
 
     function updateComments(comments){
@@ -86,7 +76,7 @@ export default function Context({children}){
     }
 
     return (
-        <ContextProvider.Provider value={{ currentUser, updateCurrentUser, currentToken, updateToken, isStillLoggedIn, changeLoggedInStatus, postsFromAPI, getAuthorsFromAPI, authorForPosts, getComments }}>
+        <ContextProvider.Provider value={{ currentUser, updateCurrentUser, currentToken, updateToken, isStillLoggedIn, changeLoggedInStatus, postsFromAPI, getAuthorsFromAPI, authorForPosts, getComments, updateComments }}>
             {children}
         </ContextProvider.Provider>
     );
