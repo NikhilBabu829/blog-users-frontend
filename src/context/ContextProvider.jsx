@@ -6,29 +6,14 @@ export const ContextProvider = createContext();
 
 export default function Context({children}){
 
+    const user = localStorage.getItem('user');
+
     const [currentUser, setCurrentUser] = useState({});
-    const [currentToken, setCurrentToken] = useState(null);
+    const [currentToken, setCurrentToken] = useState( user ? user : null );
     const [isStillLoggedIn, setIsStillLoggedIn] = useState(false);
     const [postsFromAPI, setPostsFromAPI] = useState([]);
     const [authorForPosts, setAuthorForPosts] = useState([]);
-
-    async function getUserFromAPI(){
-        const user = localStorage.getItem('user');
-        try{
-            if(user){
-                const apiUserCall = await fetch(`https://blog-api-odin-52edb7119820.herokuapp.com/api/view-user`, {method : 'GET', headers : {'Content-Type': 'application/json', authorization : `bearer ${JSON.parse(user)}`}});
-                const userResponse = await apiUserCall.json();
-                updateCurrentUser({user : userResponse.username});
-                updateToken(user)
-            } 
-            else{
-                return null;
-            }
-        }
-        catch(err){
-            return err
-        }
-    }
+    const [getComments, setGetComments] = useState([]);
 
     async function getPostsFromAPI(){
         try{
@@ -48,16 +33,31 @@ export default function Context({children}){
         try{
             const apiAuthorFetch = await fetch(`https://blog-api-odin-52edb7119820.herokuapp.com/api/view-author/${id}`, {method : "GET", headers : {"Content-Type" : "application/json"}});
             const apiData = await apiAuthorFetch.json();
-            updateAuthorForPosts(`${apiData.first_name} ${apiData.last_name}}`)
+            updateAuthorForPosts(`${apiData.first_name} ${apiData.last_name}`)
         }catch(err){
             console.log(err)
         }
     }
 
+    async function getCommentsFromAPI(){
+        try{
+            const apiCall = await fetch("https://blog-api-odin-52edb7119820.herokuapp.com/api/view-comments", {method : "GET", headers : {'Content-Type': 'application/json'}});
+            const apiData = await apiCall.json();
+            updateComments(apiData);
+        }
+        catch(err){
+            console.log(err);
+        }
+    }
+
     useEffect(()=>{
-        getUserFromAPI()
         getPostsFromAPI()
+        getCommentsFromAPI()
     },[])
+
+    function updateComments(comments){
+        setGetComments([comments])
+    }
 
     function updateAuthorForPosts(name){
         setAuthorForPosts((prevData)=>{
@@ -86,7 +86,7 @@ export default function Context({children}){
     }
 
     return (
-        <ContextProvider.Provider value={{ currentUser, updateCurrentUser, currentToken, updateToken, isStillLoggedIn, changeLoggedInStatus, postsFromAPI, getAuthorsFromAPI, authorForPosts }}>
+        <ContextProvider.Provider value={{ currentUser, updateCurrentUser, currentToken, updateToken, isStillLoggedIn, changeLoggedInStatus, postsFromAPI, getAuthorsFromAPI, authorForPosts, getComments }}>
             {children}
         </ContextProvider.Provider>
     );

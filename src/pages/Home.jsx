@@ -1,86 +1,84 @@
 import { useContext, useState } from "react";
 import { ContextProvider } from "../context/ContextProvider";
 import NavBar from "../components/NavBar";
-import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
-import Collapse from '@mui/material/Collapse';
 import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { red } from '@mui/material/colors';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Container from '@mui/material/Container'
-import { Grid } from "@mui/material";
+import { Box, CircularProgress, Grid } from "@mui/material";
 import { v4 as uuidv4 } from 'uuid';
-
-
-const ExpandMore = styled((props) => {
-    const { expand, ...other } = props;
-    return <IconButton {...other} />;
-  })(({ theme, expand }) => ({
-    transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-    marginLeft: 'auto',
-    transition: theme.transitions.create('transform', {
-      duration: theme.transitions.duration.shortest,
-    }),
-  }));
+import { Link } from "react-router-dom";
 
 export default function Home(){
     
-    const { currentToken, updateToken, currentUser, setCurrentUser, postsFromAPI, getAuthorsFromAPI, authorForPosts} = useContext(ContextProvider); 
+    const { postsFromAPI, authorForPosts } = useContext(ContextProvider); 
 
-    const [expanded, setExpanded] = useState(false);
-
-    const handleExpandClick = () => {
-        setExpanded(!expanded);
-    };
+    //TODO make a logginIn status state, so that you can display only the things you should when you are logged in 
+    //TODO Display all the comments
+    //TODO give users the ability to edit and delete comments
+    //TODO Link your update route to a specific button
+    //TODO give user the ability to delete their account
 
     return(
         <>
             <NavBar />
-            <Container maxWidth="lg" sx={{paddingTop : "20px"}}>
+            <Container maxWidth="lg" sx={{paddingTop : "20px", paddingBottom : "20px"}}>
             {
                 Object.values(postsFromAPI).length > 0 && Object.values(authorForPosts).length == Object.values(postsFromAPI).length ? (
-                    <Grid container spacing={1}>
+                    <Grid container spacing={3}>
                         {
                             postsFromAPI.map((post, index)=>(
-                                <Grid item xs={3} lg={4} xl={4} display={"flex"} justifyContent={"center"} alignItems={"center"} key={uuidv4()}>
-                                    <Card sx={{ maxWidth: 345 }} key={post._id}>
-                                        <CardHeader
-                                            avatar={
-                                            <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                                                {authorForPosts[index].name.charAt(0).toUpperCase()}
-                                            </Avatar>
-                                            }
-                                            action={
-                                            <IconButton aria-label="settings">
-                                                <MoreVertIcon />
-                                            </IconButton>
-                                            }
-                                            title={post.title}
-                                            subheader="September 14, 2016"
-                                        />
-                                        <CardContent>
-                                            <Typography variant="body2" color="text.secondary">
-                                            {post.content}
-                                            </Typography>
-                                        </CardContent>
-                                    </Card>
+                                <Grid item xs={12} xl={12} display={"flex"} justifyContent={"center"} alignItems={"center"} key={uuidv4()}>
+                                    <Box sx={{ display : "flex", flexDirection:"column", alignItems:"center", width:"100%"}}>
+                                        <Card sx={{ maxWidth: '60%', minWidth:"60%", marginBottom:"0.2%"}} key={uuidv4()}>
+                                            <CardHeader
+                                                avatar={
+                                                <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+                                                    {authorForPosts[index].name.charAt(0).toUpperCase()}
+                                                </Avatar>
+                                                }
+                                                title={post.title}
+                                                subheader="September 14, 2016"
+                                            />
+                                        </Card>
+                                        <Card sx={{ maxWidth: '60%', minWidth:"60%", marginBottom:"0.2%"}} key={uuidv4()}>
+                                            <CardContent>
+                                                <Typography variant="body2" color="text.secondary">
+                                                {post.content}
+                                                </Typography>
+                                                <Typography variant="subtitle2" color="text.primary">
+                                                    By {`${authorForPosts[index].name}`}
+                                                </Typography>
+                                            </CardContent>
+                                        </Card>
+                                        <Card sx={{ maxWidth: '60%', minWidth:"60%"}} key={uuidv4()}>
+                                            <CardHeader
+                                                subheader="Comments"
+                                            />
+                                            <Link to={`/create-comment/${post._id}`}>write comment</Link>
+                                            {/* <Card sx={{ maxWidth: '100%', minWidth:"100%", marginBottom:"0.2%"}} key={uuidv4()}>
+                                                <CardContent>
+                                                    <Typography variant="body2" color="text.secondary">
+                                                    {post.content}
+                                                    </Typography>
+                                                    <Typography variant="subtitle2" color="text.primary">
+                                                        By {`${authorForPosts[index].name}`}
+                                                    </Typography>
+                                                </CardContent>
+                                            </Card> */}
+                                        </Card>
+                                    </Box>
                                 </Grid>
                             ))
                         }
                     </Grid>
                 ) : (
-                    <>
-                        <Typography variant="h1" color="initial">Loading</Typography>
-                    </>
+                    <Box sx={{ width:'100%', height : "90vh" , display : "flex", justifyContent : "center", alignItems : "center"}}>
+                        <CircularProgress />
+                    </Box>
                 )
             }
             </Container>

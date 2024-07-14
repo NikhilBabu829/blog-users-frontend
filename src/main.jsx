@@ -10,6 +10,7 @@ import Context from './context/ContextProvider.jsx'
 import UpdateUser from './pages/UserPages/UpdateUser.jsx'
 import Home from './pages/Home.jsx'
 import LoguutUser from './pages/UserPages/LogoutUser.jsx'
+import CreateComment  from './pages/CommentPages/CreateComment.jsx'
 
 const theme = createTheme({
   palette : {
@@ -23,16 +24,24 @@ const router = createBrowserRouter([
     element : <RegisterUser/>
   },
   {
+    path : "/create-comment/:id",
+    element : <CreateComment />
+  },
+  {
     path : "/login-user",
     element : <LoginUser/>
   },
   {
-    path : "/logout-user",
+    path : "/logout-user/*",
     element : <LoguutUser/>
   },
   {
     path : "/update-user",
     element : <UpdateUser/>
+  },
+  {
+    path : "/home",
+    element : <Home />
   },
   {
     path : "/",

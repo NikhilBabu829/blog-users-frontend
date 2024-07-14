@@ -11,17 +11,20 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ContextProvider } from '../context/ContextProvider';
 
 function ResponsiveAppBar() {
-  const { currentUser, updateCurrentUser, currentToken, updateToken, isStillLoggedIn, changeLoggedInStatus} = useContext(ContextProvider)
+  const { currentToken } = useContext(ContextProvider)
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState({});
   
+  const user = localStorage.getItem('user');
+
   const pages = ['Products', 'Pricing', 'Blog'];
-  const settings = (typeof currentUser == "object" && Object.keys(currentUser).length <= 0) || (currentUser==null) || (currentUser==undefined) ? [ "Login", "Register"] : ['Profile', 'Account', 'Dashboard', 'Logout'];
+  const settings = (currentToken == null && currentToken != user)  ? [ "Login", "Register"] : ['Profile', 'Account', 'Dashboard', 'Logout'];
   
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -37,6 +40,18 @@ function ResponsiveAppBar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  async function makeAPICallForUser(){
+    const apiUserCall = await fetch(`https://blog-api-odin-52edb7119820.herokuapp.com/api/view-user`, {method : 'GET', headers : {'Content-Type': 'application/json', authorization : `bearer ${JSON.parse(user)}`}});
+    const userResponse = await apiUserCall.json();
+    setCurrentUser({user : userResponse.username});
+  }
+
+  useEffect(()=>{
+    if((currentToken != null && currentToken == user)){
+      makeAPICallForUser();
+    }
+  })
 
   return (
     <AppBar position="sticky">
@@ -127,7 +142,7 @@ function ResponsiveAppBar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt={(typeof currentUser == "object" && Object.keys(currentUser).length <= 0) || (currentUser==null) || (currentUser==undefined)?"User" : currentUser.user} src="/static/images/avatar/2.jpg" />
+                <Avatar alt={(currentToken == null && currentToken != user) ? "User" : currentUser.user} src="/static/images/avatar/2.jpg" />
               </IconButton>
             </Tooltip>
             <Menu

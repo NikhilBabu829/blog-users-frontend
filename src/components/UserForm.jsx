@@ -1,8 +1,13 @@
 import {Box,Container,TextField,Typography,Button,Card,CardContent, Snackbar} from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Loading from "./Loading";
 
-export default function UserForm({handleSubmit, formData, handleSnackBarOnClose, setFormData, displaySnackBar, formType, snackBarMsg, currentUser}){
+export default function UserForm({handleSubmit, formData, handleSnackBarOnClose, setFormData, displaySnackBar, formType, snackBarMsg, currentUser, setLoading}){
+
+  function setLoadingAnimation(){
+    setLoading(true);
+  }
+
     return (
     <>
     <Container
@@ -29,6 +34,7 @@ export default function UserForm({handleSubmit, formData, handleSnackBarOnClose,
           <form onSubmit={(e)=>{
             e.preventDefault();
             handleSubmit();
+            setLoadingAnimation();
           }}>
             { 
               ( typeof currentUser == "object" && Object.keys(currentUser).length <= 0) || (currentUser==null) || (currentUser==undefined) ? (
