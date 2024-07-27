@@ -13,8 +13,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { Link } from "react-router-dom";
 
 export default function Home(){
-    
-    const { postsFromAPI, authorForPosts, updateComments, getComments, updatePosts, updateAuthorForPosts } = useContext(ContextProvider); 
 
     //TODO make a logginIn status state, so that you can display only the things you should when you are logged in 
     //TODO Display all the comments
@@ -22,11 +20,17 @@ export default function Home(){
     //TODO Link your update route to a specific button
     //TODO give user the ability to delete their account
 
+    const [commentsFromAPI, setCommentsFromAPI] = useState([])
+    const [postsFromAPI, setPostsFromAPI] = useState([])
+    const [authorForPostsFromAPI, setAuthorForPosts] = useState([])
+
     async function getCommentsFromAPI(){
         try{
             const apiCall = await fetch("https://blog-api-odin-52edb7119820.herokuapp.com/api/view-comments", {method : "GET", headers : {'Content-Type': 'application/json'}});
             const apiData = await apiCall.json();
-            updateComments(apiData);
+            setCommentsFromAPI((prevData)=>{
+                return apiData
+            });
         }
         catch(err){
             console.log(err);
@@ -40,7 +44,9 @@ export default function Home(){
             apiData.map((data)=>{
                 const author = getAuthorsFromAPI(data.author);
             })
-            updatePosts(apiData);
+            setPostsFromAPI((prevData)=>{
+                return apiData
+            });
         }   
         catch(err){
             return err
@@ -51,7 +57,13 @@ export default function Home(){
         try{
             const apiAuthorFetch = await fetch(`https://blog-api-odin-52edb7119820.herokuapp.com/api/view-author/${id}`, {method : "GET", headers : {"Content-Type" : "application/json"}});
             const apiData = await apiAuthorFetch.json();
-            updateAuthorForPosts(`${apiData.first_name} ${apiData.last_name}`)
+            setAuthorForPosts((prevData)=>{
+                return ([
+                    ...prevData,{
+                        name : `${apiData.first_name} ${apiData.last_name}`
+                    }
+                ])
+            })
         }catch(err){
             console.log(err)
         }
@@ -67,7 +79,7 @@ export default function Home(){
             <NavBar />
             <Container maxWidth="lg" sx={{paddingTop : "20px", paddingBottom : "20px"}}>
             {
-                Object.values(postsFromAPI).length > 0 && Object.values(authorForPosts).length == Object.values(postsFromAPI).length ? (
+                Object.values(postsFromAPI).length > 0 && Object.values(authorForPostsFromAPI).length == Object.values(postsFromAPI).length ? (
                     <Grid container spacing={3}>
                         {
                             postsFromAPI.map((post, index)=>(
@@ -77,7 +89,7 @@ export default function Home(){
                                             <CardHeader
                                                 avatar={
                                                 <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                                                    {authorForPosts[index].name.charAt(0).toUpperCase()}
+                                                    {authorForPostsFromAPI[index].name.charAt(0).toUpperCase()}
                                                 </Avatar>
                                                 }
                                                 title={post.title}
@@ -90,7 +102,7 @@ export default function Home(){
                                                 {post.content}
                                                 </Typography>
                                                 <Typography variant="subtitle2" color="text.primary">
-                                                    By {`${authorForPosts[index].name}`}
+                                                    By {`${authorForPostsFromAPI[index].name}`}
                                                 </Typography>
                                             </CardContent>
                                         </Card>
@@ -101,7 +113,7 @@ export default function Home(){
                                             <Link to={`/create-comment/${post._id}`}>write comment</Link>
                                         </Card>
                                         {
-                                            getComments.map((comment)=>{
+                                            commentsFromAPI.map((comment)=>{
                                                 if(comment.post == post._id){
                                                     return (
                                                          <Card sx={{ maxWidth: '60%', minWidth:"60%", marginBottom:"0.2%"}} key={uuidv4()}>

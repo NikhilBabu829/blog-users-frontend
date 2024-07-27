@@ -5,48 +5,30 @@ export const ContextProvider = createContext();
 
 
 export default function Context({children}){
-
-    const user = localStorage.getItem('user');
-
     const [currentUser, setCurrentUser] = useState({});
     const [currentToken, setCurrentToken] = useState();
     const [isStillLoggedIn, setIsStillLoggedIn] = useState(false);
-    const [postsFromAPI, setPostsFromAPI] = useState([]);
-    const [authorForPosts, setAuthorForPosts] = useState([]);
-    const [getComments, setGetComments] = useState([]);
-
-    function updateComments(comments){
-        setGetComments(comments)
-    }
-
-    function updateAuthorForPosts(name){
-        setAuthorForPosts((prevData)=>{
-            return ([
-                ...prevData,{
-                    name : name
-                }
-            ])
-        })
-    }
 
     function updateCurrentUser(data){
-        setCurrentUser(data);
-    }
-
-    function updatePosts(data){
-        setPostsFromAPI(data);
+        setCurrentUser((prevData)=>{
+            return data
+        });
     }
 
     function changeLoggedInStatus(data){
-        setIsStillLoggedIn(data);
+        setIsStillLoggedIn((prevData)=>{
+            return data
+        });
     }
 
     function updateToken(token){
-        setCurrentToken(token);
+        setCurrentToken((prevData)=>{
+            return token
+        });
     }
 
     return (
-        <ContextProvider.Provider value={{ currentUser,updatePosts ,updateCurrentUser, currentToken, updateToken, isStillLoggedIn, changeLoggedInStatus, postsFromAPI, authorForPosts, getComments, updateAuthorForPosts ,updateComments }}>
+        <ContextProvider.Provider value={{ currentUser ,updateCurrentUser, currentToken, updateToken, isStillLoggedIn, changeLoggedInStatus }}>
             {children}
         </ContextProvider.Provider>
     );

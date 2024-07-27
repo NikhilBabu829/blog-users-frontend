@@ -13,8 +13,9 @@ export default function LoguutUser(){
 
     async function loginUserAPICall(){
         const user = localStorage.getItem('user');
-        const apiCall = await fetch("https://blog-api-odin-52edb7119820.herokuapp.com/api/user-logout",{method : 'POST', headers : {'Content-Type' : 'application/json', "authorization" : `Bearer ${user}`}})  
-        if(apiCall.status === 200){
+        const userToken = `Bearer ${JSON.parse(user)}`
+        const apiCall = await fetch("https://blog-api-odin-52edb7119820.herokuapp.com/api/user-logout",{method : 'POST', headers : {'Content-Type' : 'application/json', "authorization" : userToken}})  
+        if(apiCall.status == 200){
             localStorage.removeItem('user');
             updateCurrentUser({});
             updateToken(null)
