@@ -9,7 +9,7 @@ export default function LoginUser(){
 
     const [formData, setFormData] = useState({});
     const [displaySnackBar, setSnackBar] = useState(false);
-    const {updateCurrentUser, currentUser, updateToken } = useContext(ContextProvider)
+    const { currentUser, updateToken } = useContext(ContextProvider)
     const [Loading, setLoading] = useState(false);
 
     async function handleSubmit(){

@@ -12,8 +12,8 @@ export default function LoguutUser(){
     const {updateCurrentUser, currentUser, updateToken, changeLoggedInStatus, currentToken} = useContext(ContextProvider);
 
     async function loginUserAPICall(){
-        const apiCall = await fetch("https://blog-api-odin-52edb7119820.herokuapp.com/api/user-logout",{method : 'POST', headers : {'Content-Type' : 'application/json', "authorization" : `Bearer ${currentToken}`}})
-        const responseFromLogOut = await apiCall.json()
+        const user = localStorage.getItem('user');
+        const apiCall = await fetch("https://blog-api-odin-52edb7119820.herokuapp.com/api/user-logout",{method : 'POST', headers : {'Content-Type' : 'application/json', "authorization" : `Bearer ${user}`}})  
         if(apiCall.status === 200){
             localStorage.removeItem('user');
             updateCurrentUser({});
@@ -25,7 +25,7 @@ export default function LoguutUser(){
         loginUserAPICall()
     },[])
     return (
-        Object.keys(currentUser).length <= 0
+        localStorage.getItem("user") == null
         ? (
             <>
                 <Navigate to="/" />

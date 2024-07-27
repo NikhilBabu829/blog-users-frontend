@@ -9,14 +9,14 @@ export default function Context({children}){
     const user = localStorage.getItem('user');
 
     const [currentUser, setCurrentUser] = useState({});
-    const [currentToken, setCurrentToken] = useState( user ? user : null );
+    const [currentToken, setCurrentToken] = useState();
     const [isStillLoggedIn, setIsStillLoggedIn] = useState(false);
     const [postsFromAPI, setPostsFromAPI] = useState([]);
     const [authorForPosts, setAuthorForPosts] = useState([]);
     const [getComments, setGetComments] = useState([]);
 
     function updateComments(comments){
-        setGetComments([comments])
+        setGetComments(comments)
     }
 
     function updateAuthorForPosts(name){

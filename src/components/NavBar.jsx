@@ -21,10 +21,10 @@ function ResponsiveAppBar() {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [currentUser, setCurrentUser] = useState({});
   
-  const user = localStorage.getItem('user');
+  const [user, setUser ] = useState(localStorage.getItem('user'));
 
   const pages = ['Products', 'Pricing', 'Blog'];
-  const settings = (currentToken == null && currentToken != user)  ? [ "Login", "Register"] : ['Profile', 'Account', 'Dashboard', 'Logout'];
+  const settings = (currentToken == null || user == null)  ? [ "Login", "Register"] : ['Profile', 'Account', 'Dashboard', 'Logout'];
   
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -142,7 +142,7 @@ function ResponsiveAppBar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt={(currentToken == null && currentToken != user) ? "User" : currentUser.user} src="/static/images/avatar/2.jpg" />
+                <Avatar alt={(currentToken == null || user == null) ? "User" : currentUser.user} src="/static/images/avatar/2.jpg" />
               </IconButton>
             </Tooltip>
             <Menu

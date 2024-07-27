@@ -99,17 +99,25 @@ export default function Home(){
                                                 subheader="Comments"
                                             />
                                             <Link to={`/create-comment/${post._id}`}>write comment</Link>
-                                            {/* <Card sx={{ maxWidth: '100%', minWidth:"100%", marginBottom:"0.2%"}} key={uuidv4()}>
-                                                <CardContent>
-                                                    <Typography variant="body2" color="text.secondary">
-                                                    {post.content}
-                                                    </Typography>
-                                                    <Typography variant="subtitle2" color="text.primary">
-                                                        By {`${authorForPosts[index].name}`}
-                                                    </Typography>
-                                                </CardContent>
-                                            </Card> */}
                                         </Card>
+                                        {
+                                            getComments.map((comment)=>{
+                                                if(comment.post == post._id){
+                                                    return (
+                                                         <Card sx={{ maxWidth: '60%', minWidth:"60%", marginBottom:"0.2%"}} key={uuidv4()}>
+                                                            <CardContent>
+                                                                <Typography variant="body2" color="text.primary">
+                                                                    {comment.comment_content}
+                                                                </Typography>
+                                                            </CardContent>
+                                                        </Card>
+                                                    )
+                                                }
+                                                else{
+                                                     return null;
+                                                }
+                                            })        
+                                        }
                                     </Box>
                                 </Grid>
                             ))
