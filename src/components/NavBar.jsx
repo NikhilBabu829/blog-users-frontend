@@ -16,15 +16,15 @@ import { Link } from 'react-router-dom';
 import { ContextProvider } from '../context/ContextProvider';
 
 function ResponsiveAppBar() {
-  const { currentToken } = useContext(ContextProvider)
+  const { currentToken, isStillLoggedIn } = useContext(ContextProvider)
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const [currentUser, setCurrentUser] = useState({});
+  const [currentUser, setCurrentUser] = useState();
   
   const [user, setUser ] = useState(localStorage.getItem('user'));
 
   const pages = ['Products', 'Pricing', 'Blog'];
-  const settings = (currentToken == null || user == null)  ? [ "Login", "Register"] : ['Profile', 'Account', 'Dashboard', 'Logout'];
+  const settings = (currentToken == null || user == null)  ? [ "Login", "Register"] : ['Profile', 'Logout'];
   
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -44,14 +44,14 @@ function ResponsiveAppBar() {
   async function makeAPICallForUser(){
     const apiUserCall = await fetch(`https://blog-api-odin-52edb7119820.herokuapp.com/api/view-user`, {method : 'GET', headers : {'Content-Type': 'application/json', authorization : `bearer ${JSON.parse(user)}`}});
     const userResponse = await apiUserCall.json();
-    setCurrentUser({user : userResponse.username});
+    setCurrentUser(userResponse.username);
   }
 
   useEffect(()=>{
-    if((currentToken != null && currentToken == user)){
+    if((isStillLoggedIn)){
       makeAPICallForUser();
     }
-  })
+  },[])
 
   return (
     <AppBar position="sticky">
@@ -142,7 +142,7 @@ function ResponsiveAppBar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt={(currentToken == null || user == null) ? "User" : currentUser.user} src="/static/images/avatar/2.jpg" />
+                <Avatar alt={(currentToken == null || user == null) ? "User" : currentUser} src="/broken-image.jpg"/>
               </IconButton>
             </Tooltip>
             <Menu

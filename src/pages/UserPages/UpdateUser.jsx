@@ -14,13 +14,14 @@ export default function UpdateUser(){
     const [Loading, setLoading] = useState(false);
 
     const user = localStorage.getItem("user");
-
+    
     async function handleSubmit(){
+        console.log()
         if(Object.keys(formData).length > 0){            
             const apiCall = await fetch(`https://blog-api-odin-52edb7119820.herokuapp.com/api/update-user/${currentUser.id}`,{method : 'POST', headers : {'Content-Type' : 'application/json', "authorization" : `bearer ${currentToken}`},body : JSON.stringify(formData)})
             const response = await apiCall.json();
             setLoading(false);
-            setSnackBar(true)
+            setSnackBar(true);
         }
     }
 

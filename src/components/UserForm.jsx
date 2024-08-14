@@ -56,6 +56,7 @@ export default function UserForm({handleSubmit, formData, handleSnackBarOnClose,
                 <TextField
                   id="username"
                   label={currentUser.user}
+                  value={currentUser.user}
                   variant="filled"
                   size="small"
                   type="text"

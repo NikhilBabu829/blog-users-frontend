@@ -15,10 +15,11 @@ export default function LoguutUser(){
         const user = localStorage.getItem('user');
         const userToken = `Bearer ${JSON.parse(user)}`
         const apiCall = await fetch("https://blog-api-odin-52edb7119820.herokuapp.com/api/user-logout",{method : 'POST', headers : {'Content-Type' : 'application/json', "authorization" : userToken}})  
+        localStorage.removeItem('user');
         if(apiCall.status == 200){
-            localStorage.removeItem('user');
             updateCurrentUser({});
             updateToken(null)
+            changeLoggedInStatus(false)
         }
     }
 

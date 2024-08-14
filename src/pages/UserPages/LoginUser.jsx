@@ -9,7 +9,7 @@ export default function LoginUser(){
 
     const [formData, setFormData] = useState({});
     const [displaySnackBar, setSnackBar] = useState(false);
-    const { currentUser, updateToken } = useContext(ContextProvider)
+    const { currentUser, updateToken, changeLoggedInStatus } = useContext(ContextProvider)
     const [Loading, setLoading] = useState(false);
 
     async function handleSubmit(){
@@ -19,6 +19,7 @@ export default function LoginUser(){
                 const apiCall = await fetch("https://blog-api-odin-52edb7119820.herokuapp.com/api/user-login",{method : 'POST', headers : {'Content-Type' : 'application/json'},body : JSON.stringify(formData)})
                 const response = await apiCall.json();
                 localStorage.setItem("user", JSON.stringify(response.token));
+                changeLoggedInStatus(true);
                 updateToken(response.token);
                 setLoading(false);
                 setSnackBar(true)

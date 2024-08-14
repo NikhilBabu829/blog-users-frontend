@@ -14,11 +14,11 @@ import { Link } from "react-router-dom";
 
 export default function Home(){
 
-    //TODO make a logginIn status state, so that you can display only the things you should when you are logged in 
-    //TODO Display all the comments
     //TODO give users the ability to edit and delete comments
     //TODO Link your update route to a specific button
     //TODO give user the ability to delete their account
+
+    const { isStillLoggedIn, changeLoggedInStatus } = useContext(ContextProvider);
 
     const [commentsFromAPI, setCommentsFromAPI] = useState([])
     const [postsFromAPI, setPostsFromAPI] = useState([])
@@ -106,17 +106,24 @@ export default function Home(){
                                                 </Typography>
                                             </CardContent>
                                         </Card>
-                                        <Card sx={{ maxWidth: '60%', minWidth:"60%"}} key={uuidv4()}>
-                                            <CardHeader
-                                                subheader="Comments"
-                                            />
-                                            <Link to={`/create-comment/${post._id}`}>write comment</Link>
-                                        </Card>
+                                        {
+                                            isStillLoggedIn ? (
+                                                <Card sx={{ maxWidth: '60%', minWidth:"60%"}} key={uuidv4()}>
+                                                    <CardHeader
+                                                        subheader="Comments"
+                                                    />
+                                                    <Link to={`/create-comment/${post._id}`}>write comment</Link>
+                                                </Card>
+                                            ) : (
+                                                <>
+                                                </>
+                                            )
+                                        }
                                         {
                                             commentsFromAPI.map((comment)=>{
                                                 if(comment.post == post._id){
                                                     return (
-                                                         <Card sx={{ maxWidth: '60%', minWidth:"60%", marginBottom:"0.2%"}} key={uuidv4()}>
+                                                         <Card sx={{ maxWidth: '60%', minWidth:"60%", marginTop:"0.2%"}} key={uuidv4()}>
                                                             <CardContent>
                                                                 <Typography variant="body2" color="text.primary">
                                                                     {comment.comment_content}
