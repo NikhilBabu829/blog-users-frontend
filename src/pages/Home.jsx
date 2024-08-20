@@ -24,8 +24,6 @@ export default function Home(){
     const [authorForPostsFromAPI, setAuthorForPosts] = useState([]);
     const location = useLocation();
 
-    console.log(location);
-
     async function getCommentsFromAPI(){
         try{
             const apiCall = await fetch("https://blog-api-odin-52edb7119820.herokuapp.com/api/view-comments", {method : "GET", headers : {'Content-Type': 'application/json'}});

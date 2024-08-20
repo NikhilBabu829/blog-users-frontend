@@ -9,18 +9,20 @@ import Close from '@mui/icons-material/Close'
 export default function LoguutUser(){
 
     const user = localStorage.getItem('user');
-    const {updateCurrentUser, currentUser, updateToken, changeLoggedInStatus, currentToken} = useContext(ContextProvider);
+    const {updateCurrentUser, updateToken, changeLoggedInStatus, updateUser} = useContext(ContextProvider);
     const navigate = useNavigate();
+
+    console.log("this is running");
 
     async function loginUserAPICall(){
         const user = localStorage.getItem('user');
-        const userToken = `Bearer ${JSON.parse(user)}`
-        const apiCall = await fetch("https://blog-api-odin-52edb7119820.herokuapp.com/api/user-logout",{method : 'POST', headers : {'Content-Type' : 'application/json', "authorization" : userToken}})  
-        localStorage.removeItem('user');
+        const apiCall = await fetch("https://blog-api-odin-52edb7119820.herokuapp.com/api/user-logout",{method : 'POST', headers : {'Content-Type' : 'application/json', "authorization" : `Bearer ${JSON.parse(user)}`}})  
         if(apiCall.status == 200){
             updateCurrentUser({});
             updateToken(null)
             changeLoggedInStatus(false)
+            updateUser({});
+            localStorage.removeItem('user');
             navigate("/home", {state : {from : "logout"}})
         }
     }
