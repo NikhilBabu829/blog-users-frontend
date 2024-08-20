@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { ContextProvider } from "../../context/ContextProvider";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import Home from "../Home";
 import Snackbar from '@mui/material/Snackbar'
 import IconButton from '@mui/material/IconButton'
@@ -10,6 +10,7 @@ export default function LoguutUser(){
 
     const user = localStorage.getItem('user');
     const {updateCurrentUser, currentUser, updateToken, changeLoggedInStatus, currentToken} = useContext(ContextProvider);
+    const navigate = useNavigate();
 
     async function loginUserAPICall(){
         const user = localStorage.getItem('user');
@@ -20,6 +21,7 @@ export default function LoguutUser(){
             updateCurrentUser({});
             updateToken(null)
             changeLoggedInStatus(false)
+            navigate("/home", {state : {from : "logout"}})
         }
     }
 

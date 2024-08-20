@@ -47,11 +47,9 @@ function ResponsiveAppBar() {
     setCurrentUser(userResponse.username);
   }
 
-  useEffect(()=>{
-    if((isStillLoggedIn)){
-      makeAPICallForUser();
-    }
-  },[])
+  if((isStillLoggedIn)){
+    makeAPICallForUser();
+  }
 
   return (
     <AppBar position="sticky">

@@ -3,14 +3,16 @@ import UserForm from "../../components/UserForm";
 import {ContextProvider} from "../../context/ContextProvider";
 import NavBar from "../../components/NavBar";
 import { Box, CircularProgress } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 CircularProgress
 
 export default function LoginUser(){
 
     const [formData, setFormData] = useState({});
     const [displaySnackBar, setSnackBar] = useState(false);
-    const { currentUser, updateToken, changeLoggedInStatus } = useContext(ContextProvider)
+    const { currentUser, updateToken, changeLoggedInStatus, updateUser } = useContext(ContextProvider)
     const [Loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     async function handleSubmit(){
         localStorage.removeItem("user");
@@ -21,8 +23,13 @@ export default function LoginUser(){
                 localStorage.setItem("user", JSON.stringify(response.token));
                 changeLoggedInStatus(true);
                 updateToken(response.token);
+                updateUser(response.token);
                 setLoading(false);
-                setSnackBar(true)
+                setSnackBar(true);
+                setTimeout(()=>{
+                    setLoading(true);
+                },4000)
+                navigate("/home", {state : {from : "login"}});
             }
             catch(error){
 

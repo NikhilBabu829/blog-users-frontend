@@ -2,13 +2,12 @@ import { createContext, useEffect, useState } from "react";
 
 export const ContextProvider = createContext(); 
 
-
-
 export default function Context({children}){
     const [currentUser, setCurrentUser] = useState({});
     const [currentToken, setCurrentToken] = useState();
     const [isStillLoggedIn, setIsStillLoggedIn] = useState(false);
-
+    const [user, setUser] = useState(localStorage.getItem("user") ? localStorage.getItem("user") : {});
+    
     function updateCurrentUser(data){
         setCurrentUser((prevData)=>{
             return data
@@ -27,8 +26,27 @@ export default function Context({children}){
         });
     }
 
+    function updateUser(user){
+        setUser((prevData)=>{
+            return user
+        });
+    }
+
+    async function keepUserLoggedIn(){
+        const apiCall = await fetch("https://blog-api-odin-52edb7119820.herokuapp.com/api/view-user",{method : 'GET', headers : {'Content-Type' : 'application/json', 'authorization' : `Bearer ${JSON.parse(user)}`}});
+        const response = await apiCall.json();
+        console.log(response);
+        localStorage.setItem("user", user);
+        setIsStillLoggedIn(true);
+        updateToken(user);
+    }
+
+    if(Object.keys(user).length > 0){
+        keepUserLoggedIn();
+    }
+
     return (
-        <ContextProvider.Provider value={{ currentUser ,updateCurrentUser, currentToken, updateToken, isStillLoggedIn, changeLoggedInStatus }}>
+        <ContextProvider.Provider value={{ currentUser ,updateCurrentUser, currentToken, updateToken, isStillLoggedIn, changeLoggedInStatus, updateUser }}>
             {children}
         </ContextProvider.Provider>
     );

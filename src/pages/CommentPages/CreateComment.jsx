@@ -2,18 +2,21 @@ import { Card, CardHeader, Container, Avatar, IconButton, TextField, Button } fr
 import Typography from '@mui/material/Typography'
 import { useContext, useState } from 'react'
 import { ContextProvider } from '../../context/ContextProvider';
-import { useParams } from 'react-router-dom';
+import { Link, redirect, useNavigate, useParams } from 'react-router-dom';
 
 export default function CreateComment(){
 
     const { currentToken } = useContext(ContextProvider); 
     const {id} = useParams();
-
     const [comment_content, setCommentContent] = useState({});
+    const navigate = useNavigate();
+
+
 
     async function MakeAPICall(){
         const apiCall = await fetch("https://blog-api-odin-52edb7119820.herokuapp.com/api/create-comment", {method : "POST", headers: {'Content-Type': 'application/json', authorization: `Bearer ${currentToken}`}, body : JSON.stringify({comment_content : comment_content.comment_content, postId : id})})
         const response = await apiCall.json();
+        navigate("/home", {state : {from : "createComment"}});
     }
 
     return (
@@ -24,7 +27,7 @@ export default function CreateComment(){
                 />
                 <form onSubmit={(e)=>{
                     e.preventDefault();
-                    MakeAPICall()    
+                    MakeAPICall();
                 }}>
                     <TextField
                         id="standard-multiline-flexible"

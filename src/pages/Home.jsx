@@ -8,9 +8,9 @@ import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import { red } from '@mui/material/colors';
 import Container from '@mui/material/Container'
-import { Box, CircularProgress, Grid } from "@mui/material";
+import { Box, CircularProgress, Grid, Snackbar } from "@mui/material";
 import { v4 as uuidv4 } from 'uuid';
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 export default function Home(){
 
@@ -19,10 +19,12 @@ export default function Home(){
     //TODO give user the ability to delete their account
 
     const { isStillLoggedIn, changeLoggedInStatus } = useContext(ContextProvider);
-
     const [commentsFromAPI, setCommentsFromAPI] = useState([])
     const [postsFromAPI, setPostsFromAPI] = useState([])
-    const [authorForPostsFromAPI, setAuthorForPosts] = useState([])
+    const [authorForPostsFromAPI, setAuthorForPosts] = useState([]);
+    const location = useLocation();
+
+    console.log(location);
 
     async function getCommentsFromAPI(){
         try{
@@ -65,14 +67,14 @@ export default function Home(){
                 ])
             })
         }catch(err){
-            console.log(err)
+            console.log(err);
         }
     }
 
     useEffect(()=>{
         getCommentsFromAPI()
         getPostsFromAPI()
-    },[]);
+    },[])
 
     return(
         <>
