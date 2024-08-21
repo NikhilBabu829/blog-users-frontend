@@ -33,17 +33,22 @@ export default function Context({children}){
     }
 
     async function keepUserLoggedIn(){
+        console.log(user);
         const apiCall = await fetch("https://blog-api-odin-52edb7119820.herokuapp.com/api/view-user",{method : 'GET', headers : {'Content-Type' : 'application/json', 'authorization' : `Bearer ${JSON.parse(user)}`}});
         const response = await apiCall.json();
-        console.log(response);
-        localStorage.setItem("user", user);
-        setIsStillLoggedIn(true);
-        updateToken(user);
+        if(response.username){
+            localStorage.setItem("user", user);
+            setIsStillLoggedIn(true);
+            updateToken(user);
+        }
     }
 
-    if(Object.keys(user).length > 0){
-        keepUserLoggedIn();
-    }
+    useEffect(()=>{
+        if(Object.keys(user).length > 0){
+            keepUserLoggedIn();
+        }
+    },[])
+
 
     return (
         <ContextProvider.Provider value={{ currentUser ,updateCurrentUser, currentToken, updateToken, isStillLoggedIn, changeLoggedInStatus, updateUser }}>

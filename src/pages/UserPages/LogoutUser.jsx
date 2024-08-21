@@ -12,8 +12,6 @@ export default function LoguutUser(){
     const {updateCurrentUser, updateToken, changeLoggedInStatus, updateUser} = useContext(ContextProvider);
     const navigate = useNavigate();
 
-    console.log("this is running");
-
     async function loginUserAPICall(){
         const user = localStorage.getItem('user');
         const apiCall = await fetch("https://blog-api-odin-52edb7119820.herokuapp.com/api/user-logout",{method : 'POST', headers : {'Content-Type' : 'application/json', "authorization" : `Bearer ${JSON.parse(user)}`}})  
