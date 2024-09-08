@@ -10,7 +10,7 @@ export default function LoginUser(){
 
     const [formData, setFormData] = useState({});
     const [displaySnackBar, setSnackBar] = useState(false);
-    const { currentUser, updateToken, changeLoggedInStatus, updateUser } = useContext(ContextProvider)
+    const { currentUser, updateToken, changeLoggedInStatus, updateUser, updateDisplayDelete } = useContext(ContextProvider)
     const [Loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -20,17 +20,17 @@ export default function LoginUser(){
             try{
                 const apiCall = await fetch("https://blog-api-odin-52edb7119820.herokuapp.com/api/user-login",{method : 'POST', headers : {'Content-Type' : 'application/json'},body : JSON.stringify(formData)})
                 const response = await apiCall.json();
-                console.log(response.token);
                 localStorage.setItem("user", JSON.stringify(response.token));
                 changeLoggedInStatus(true);
                 updateToken(response.token);
                 updateUser(response.token);
                 setLoading(false);
+                updateDisplayDelete(false);
                 setSnackBar(true);
                 setTimeout(()=>{
                     setLoading(true);
-                },4000)
-                navigate("/home", {state : {from : "login"}});
+                },2000)
+                navigate("/home");
             }
             catch(error){
 

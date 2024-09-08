@@ -8,9 +8,9 @@ import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import { red } from '@mui/material/colors';
 import Container from '@mui/material/Container'
-import { Box, CircularProgress, Grid, Snackbar } from "@mui/material";
+import { Box, CircularProgress, Grid, Snackbar, Button } from "@mui/material";
 import { v4 as uuidv4 } from 'uuid';
-import { Link, useLocation } from "react-router-dom";
+import { json, Link } from "react-router-dom";
 
 export default function Home(){
 
@@ -18,11 +18,11 @@ export default function Home(){
     //TODO Link your update route to a specific button
     //TODO give user the ability to delete their account
 
-    const { isStillLoggedIn, changeLoggedInStatus } = useContext(ContextProvider);
+    // const { isStillLoggedIn, changeLoggedInStatus } = useContext(ContextProvider);
+    const { currentUser ,updateCurrentUser, currentToken, updateToken, isStillLoggedIn, changeLoggedInStatus, updateUser, updateDisplayDelete, displayDelete } = useContext(ContextProvider);
     const [commentsFromAPI, setCommentsFromAPI] = useState([])
     const [postsFromAPI, setPostsFromAPI] = useState([])
     const [authorForPostsFromAPI, setAuthorForPosts] = useState([]);
-    const location = useLocation();
 
     async function getCommentsFromAPI(){
         try{
@@ -66,6 +66,33 @@ export default function Home(){
             })
         }catch(err){
             console.log(err);
+        }
+    }
+
+    async function getUser(){
+        const apiCall = await fetch("https://blog-api-odin-52edb7119820.herokuapp.com/api/view-user",{ method : 'GET', headers : {'Content-Type' : 'application/json', 'authorization' : `Bearer ${JSON.parse(currentToken)}`} });
+        const response = await apiCall.json();
+        if(apiCall.status === 200){
+            const userId = response.id
+            return userId;
+        }else{
+            return null;
+        }
+    }
+
+    async function giveAccessToDeleteComment(id){
+        try{
+            const commentAuth = await fetch(`https://blog-api-odin-52edb7119820.herokuapp.com/api/view-comment-author`, {method : "POST", headers: {'Content-Type': 'application/json'}, body : JSON.stringify({author_id : id})})
+            const response = await commentAuth.json();
+            const userIdFromComment = response.check[0].user;
+            const acutalUserId =  await getUser();
+            if(userIdFromComment == acutalUserId){
+                updateDisplayDelete(true);
+            }else{
+                updateDisplayDelete(false);
+            }
+        }catch(err){
+
         }
     }
 
@@ -121,15 +148,35 @@ export default function Home(){
                                         }
                                         {
                                             commentsFromAPI.map((comment)=>{
+                                                giveAccessToDeleteComment(comment.author);
                                                 if(comment.post == post._id){
                                                     return (
-                                                         <Card sx={{ maxWidth: '60%', minWidth:"60%", marginTop:"0.2%"}} key={uuidv4()}>
+                                                        displayDelete ? (
+                                                        <Card sx={{ maxWidth: '60%', minWidth:"60%", marginTop:"0.2%"}} key={uuidv4()}>
+                                                            <CardContent>
+                                                                <Grid container spacing={2}>
+                                                                    <Grid size={8}>
+                                                                        <Typography variant="body2" color="text.primary">
+                                                                            {comment.comment_content}
+                                                                        </Typography>
+                                                                    </Grid>
+                                                                    <Grid size={2}>
+                                                                        <Button variant="outlined" color="error" size="small">
+                                                                        Delete
+                                                                        </Button>
+                                                                    </Grid>
+                                                                </Grid>
+                                                            </CardContent>
+                                                        </Card>
+                                                        ) : (
+                                                        <Card sx={{ maxWidth: '60%', minWidth:"60%", marginTop:"0.2%"}} key={uuidv4()}>
                                                             <CardContent>
                                                                 <Typography variant="body2" color="text.primary">
                                                                     {comment.comment_content}
                                                                 </Typography>
                                                             </CardContent>
                                                         </Card>
+                                                        ) 
                                                     )
                                                 }
                                                 else{

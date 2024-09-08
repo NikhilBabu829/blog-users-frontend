@@ -7,6 +7,7 @@ export default function Context({children}){
     const [currentToken, setCurrentToken] = useState();
     const [isStillLoggedIn, setIsStillLoggedIn] = useState(false);
     const [user, setUser] = useState(localStorage.getItem("user") ? localStorage.getItem("user") : {});
+    const [displayDelete, setDisplayDelete] = useState();
     
     function updateCurrentUser(data){
         setCurrentUser((prevData)=>{
@@ -26,6 +27,12 @@ export default function Context({children}){
         });
     }
 
+    function updateDisplayDelete(data){
+        setDisplayDelete((prevData)=>{
+            return data
+        })
+    }
+
     function updateUser(user){
         setUser((prevData)=>{
             return user
@@ -33,8 +40,7 @@ export default function Context({children}){
     }
 
     async function keepUserLoggedIn(){
-        console.log(user);
-        const apiCall = await fetch("https://blog-api-odin-52edb7119820.herokuapp.com/api/view-user",{method : 'GET', headers : {'Content-Type' : 'application/json', 'authorization' : `Bearer ${JSON.parse(user)}`}});
+        const apiCall = await fetch("https://blog-api-odin-52edb7119820.herokuapp.com/api/view-user",{ method : 'GET', headers : {'Content-Type' : 'application/json', 'authorization' : `Bearer ${JSON.parse(user)}`} });
         const response = await apiCall.json();
         if(response.username){
             localStorage.setItem("user", user);
@@ -51,7 +57,7 @@ export default function Context({children}){
 
 
     return (
-        <ContextProvider.Provider value={{ currentUser ,updateCurrentUser, currentToken, updateToken, isStillLoggedIn, changeLoggedInStatus, updateUser }}>
+        <ContextProvider.Provider value={{ currentUser ,updateCurrentUser, currentToken, updateToken, isStillLoggedIn, changeLoggedInStatus, updateUser, updateDisplayDelete, displayDelete }}>
             {children}
         </ContextProvider.Provider>
     );
