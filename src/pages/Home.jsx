@@ -154,18 +154,20 @@ export default function Home(){
                                                         displayDelete ? (
                                                         <Card sx={{ maxWidth: '60%', minWidth:"60%", marginTop:"0.2%"}} key={uuidv4()}>
                                                             <CardContent>
-                                                                <Grid container spacing={2}>
-                                                                    <Grid size={8}>
-                                                                        <Typography variant="body2" color="text.primary">
-                                                                            {comment.comment_content}
-                                                                        </Typography>
-                                                                    </Grid>
-                                                                    <Grid size={2}>
-                                                                        <Button variant="outlined" color="error" size="small">
+                                                                {/* <Typography variant="body2" color="text.primary">
+                                                                    {comment.comment_content}
+                                                                </Typography>
+                                                                <Button variant="outlined" color="error" size="small">
+                                                                Delete
+                                                                </Button> */}
+                                                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                                    <Typography variant="body2" color="text.primary">
+                                                                        {comment.comment_content}
+                                                                    </Typography>
+                                                                    <Button variant="outlined" color="error" size="small">
                                                                         Delete
-                                                                        </Button>
-                                                                    </Grid>
-                                                                </Grid>
+                                                                    </Button>
+                                                                </Box>
                                                             </CardContent>
                                                         </Card>
                                                         ) : (
