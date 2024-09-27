@@ -96,6 +96,17 @@ export default function Home(){
         }
     }
 
+    async function deleteComment(commentId){
+        try{
+            console.log(currentToken, commentId)
+            const deleteCommentCall = await fetch('https://blog-api-odin-52edb7119820.herokuapp.com/api/delete-comment', {method : "POST", headers: {'Content-Type': 'application/json', 'authorization' : `Bearer ${JSON.parse(currentToken)}`}, body : JSON.stringify({id : commentId})});
+            const response = await deleteCommentCall.json();
+            console.log(response);
+        }catch(err){
+
+        }
+    }
+
     useEffect(()=>{
         getCommentsFromAPI()
         getPostsFromAPI()
@@ -148,23 +159,17 @@ export default function Home(){
                                         }
                                         {
                                             commentsFromAPI.map((comment)=>{
-                                                giveAccessToDeleteComment(comment.author);
                                                 if(comment.post == post._id){
+                                                    giveAccessToDeleteComment(comment.author);
                                                     return (
                                                         displayDelete ? (
                                                         <Card sx={{ maxWidth: '60%', minWidth:"60%", marginTop:"0.2%"}} key={uuidv4()}>
                                                             <CardContent>
-                                                                {/* <Typography variant="body2" color="text.primary">
-                                                                    {comment.comment_content}
-                                                                </Typography>
-                                                                <Button variant="outlined" color="error" size="small">
-                                                                Delete
-                                                                </Button> */}
                                                                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                                                     <Typography variant="body2" color="text.primary">
                                                                         {comment.comment_content}
                                                                     </Typography>
-                                                                    <Button variant="outlined" color="error" size="small">
+                                                                    <Button variant="outlined" color="error" size="small" onClick={()=>{deleteComment(comment._id)}}>
                                                                         Delete
                                                                     </Button>
                                                                 </Box>

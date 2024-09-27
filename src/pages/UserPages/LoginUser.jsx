@@ -25,12 +25,12 @@ export default function LoginUser(){
                 updateToken(response.token);
                 updateUser(response.token);
                 setLoading(false);
-                updateDisplayDelete(false);
                 setSnackBar(true);
                 setTimeout(()=>{
                     setLoading(true);
                 },2000)
                 navigate("/home");
+                window.location.reload();
             }
             catch(error){
 

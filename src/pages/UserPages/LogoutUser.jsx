@@ -22,6 +22,7 @@ export default function LoguutUser(){
             updateUser({});
             localStorage.removeItem('user');
             navigate("/home", {state : {from : "logout"}})
+            window.location.reload();
         }
     }
 
