@@ -8,9 +8,10 @@ import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import { red } from '@mui/material/colors';
 import Container from '@mui/material/Container'
-import { Box, CircularProgress, Grid, Snackbar, Button } from "@mui/material";
+import { Box, CircularProgress, Grid, Snackbar, Button, IconButton } from "@mui/material";
 import { v4 as uuidv4 } from 'uuid';
 import { json, Link } from "react-router-dom";
+import { Close } from '@mui/icons-material'
 
 export default function Home(){
 
@@ -23,6 +24,7 @@ export default function Home(){
     const [commentsFromAPI, setCommentsFromAPI] = useState([])
     const [postsFromAPI, setPostsFromAPI] = useState([])
     const [authorForPostsFromAPI, setAuthorForPosts] = useState([]);
+    const [displaySnackBar, setDisplaySnackBar] = useState(false);
 
     async function getCommentsFromAPI(){
         try{
@@ -101,10 +103,18 @@ export default function Home(){
             console.log(currentToken, commentId)
             const deleteCommentCall = await fetch('https://blog-api-odin-52edb7119820.herokuapp.com/api/delete-comment', {method : "POST", headers: {'Content-Type': 'application/json', 'authorization' : `Bearer ${JSON.parse(currentToken)}`}, body : JSON.stringify({id : commentId})});
             const response = await deleteCommentCall.json();
-            console.log(response);
+            const filteredComments = commentsFromAPI.filter(comment => comment._id !== commentId);
+            setCommentsFromAPI((prevData)=>{
+                return filteredComments
+            })
+            setDisplaySnackBar(true);
         }catch(err){
 
         }
+    }
+
+    function handleSnackBarClose(){
+        setDisplaySnackBar(false);
     }
 
     useEffect(()=>{
@@ -202,6 +212,13 @@ export default function Home(){
                     </Box>
                 )
             }
+            <Snackbar
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                open={displaySnackBar}
+                message="Deleted a Comment"
+                autoHideDuration={2000}
+                onClose={handleSnackBarClose}
+            />
             </Container>
         </>
     )
