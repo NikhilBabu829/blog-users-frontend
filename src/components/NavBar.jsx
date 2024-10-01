@@ -16,6 +16,9 @@ import { Link } from 'react-router-dom';
 import { ContextProvider } from '../context/ContextProvider';
 
 function ResponsiveAppBar() {
+
+  const myAPI = import.meta.env.VITE_API_REQUEST;
+
   const { currentToken, isStillLoggedIn } = useContext(ContextProvider)
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -23,7 +26,7 @@ function ResponsiveAppBar() {
   
   const [user, setUser ] = useState(localStorage.getItem('user'));
 
-  const pages = ['Products', 'Pricing', 'Blog'];
+  const pages = [];
   const settings = (currentToken == null || user == null)  ? [ "Login", "Register"] : ['Profile', 'Logout'];
   
   const handleOpenNavMenu = (event) => {
@@ -42,7 +45,7 @@ function ResponsiveAppBar() {
   };
 
   async function makeAPICallForUser(){
-    const apiUserCall = await fetch(`https://blog-api-odin-52edb7119820.herokuapp.com/api/view-user`, {method : 'GET', headers : {'Content-Type': 'application/json', authorization : `bearer ${JSON.parse(user)}`}});
+    const apiUserCall = await fetch(`${myAPI}view-user`, {method : 'GET', headers : {'Content-Type': 'application/json', authorization : `bearer ${JSON.parse(user)}`}});
     const userResponse = await apiUserCall.json();
     setCurrentUser(userResponse.username);
   }

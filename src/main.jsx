@@ -11,6 +11,7 @@ import UpdateUser from './pages/UserPages/UpdateUser.jsx'
 import Home from './pages/Home.jsx'
 import LoguutUser from './pages/UserPages/LogoutUser.jsx'
 import CreateComment  from './pages/CommentPages/CreateComment.jsx'
+import DetailsUser from './pages/UserPages/ProfileUser.jsx'
 
 const theme = createTheme({
   palette : {
@@ -36,8 +37,12 @@ const router = createBrowserRouter([
     element : <LoguutUser/>
   },
   {
-    path : "/profile-user",
+    path : "/update-user",
     element : <UpdateUser/>
+  },
+  {
+    path : "/profile-user",
+    element : <DetailsUser/>
   },
   {
     path : "/home",

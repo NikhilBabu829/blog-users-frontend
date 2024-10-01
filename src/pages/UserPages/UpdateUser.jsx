@@ -7,6 +7,8 @@ import NavBar from "../../components/NavBar";
 
 export default function UpdateUser(){
 
+    const myAPI = import.meta.env.VITE_API_REQUEST;
+
     const [formData, setFormData] = useState({});
     const [displaySnackBar, setSnackBar] = useState(false);
     const [displaySnackBarForError, setSnackBarForError] = useState(false);
@@ -18,7 +20,7 @@ export default function UpdateUser(){
     async function handleSubmit(){
         console.log()
         if(Object.keys(formData).length > 0){            
-            const apiCall = await fetch(`https://blog-api-odin-52edb7119820.herokuapp.com/api/update-user/${currentUser.id}`,{method : 'POST', headers : {'Content-Type' : 'application/json', "authorization" : `bearer ${currentToken}`},body : JSON.stringify(formData)})
+            const apiCall = await fetch(`${myAPI}update-user/${currentUser.id}`,{method : 'POST', headers : {'Content-Type' : 'application/json', "authorization" : `bearer ${currentToken}`},body : JSON.stringify(formData)})
             const response = await apiCall.json();
             setLoading(false);
             setSnackBar(true);

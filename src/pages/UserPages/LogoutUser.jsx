@@ -8,13 +8,15 @@ import Close from '@mui/icons-material/Close'
 
 export default function LoguutUser(){
 
+    const myAPI = import.meta.env.VITE_API_REQUEST;
+
     const user = localStorage.getItem('user');
     const {updateCurrentUser, updateToken, changeLoggedInStatus, updateUser} = useContext(ContextProvider);
     const navigate = useNavigate();
 
     async function loginUserAPICall(){
         const user = localStorage.getItem('user');
-        const apiCall = await fetch("https://blog-api-odin-52edb7119820.herokuapp.com/api/user-logout",{method : 'POST', headers : {'Content-Type' : 'application/json', "authorization" : `Bearer ${JSON.parse(user)}`}})  
+        const apiCall = await fetch(`${myAPI}user-logout`,{method : 'POST', headers : {'Content-Type' : 'application/json', "authorization" : `Bearer ${JSON.parse(user)}`}})  
         if(apiCall.status == 200){
             updateCurrentUser({});
             updateToken(null)

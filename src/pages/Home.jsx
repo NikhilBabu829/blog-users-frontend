@@ -15,9 +15,9 @@ import { Close } from '@mui/icons-material'
 
 export default function Home(){
 
-    //TODO give users the ability to edit and delete comments
-    //TODO Link your update route to a specific button
     //TODO give user the ability to delete their account
+
+    const myAPi = import.meta.env.VITE_API_REQUEST;
 
     // const { isStillLoggedIn, changeLoggedInStatus } = useContext(ContextProvider);
     const { currentUser ,updateCurrentUser, currentToken, updateToken, isStillLoggedIn, changeLoggedInStatus, updateUser, updateDisplayDelete, displayDelete } = useContext(ContextProvider);
@@ -28,7 +28,7 @@ export default function Home(){
 
     async function getCommentsFromAPI(){
         try{
-            const apiCall = await fetch("https://blog-api-odin-52edb7119820.herokuapp.com/api/view-comments", {method : "GET", headers : {'Content-Type': 'application/json'}});
+            const apiCall = await fetch(`${myAPi}view-comments`, {method : "GET", headers : {'Content-Type': 'application/json'}});
             const apiData = await apiCall.json();
             setCommentsFromAPI((prevData)=>{
                 return apiData
@@ -41,7 +41,7 @@ export default function Home(){
 
     async function getPostsFromAPI(){
         try{
-            const apiCall = await fetch("https://blog-api-odin-52edb7119820.herokuapp.com/api/view-posts", {method : "GET", headers : {'Content-Type' : 'application/json'}});
+            const apiCall = await fetch(`${myAPi}view-posts`, {method : "GET", headers : {'Content-Type' : 'application/json'}});
             const apiData = await apiCall.json();
             apiData.map((data)=>{
                 const author = getAuthorsFromAPI(data.author);
@@ -57,7 +57,7 @@ export default function Home(){
 
     async function getAuthorsFromAPI(id){
         try{
-            const apiAuthorFetch = await fetch(`https://blog-api-odin-52edb7119820.herokuapp.com/api/view-author/${id}`, {method : "GET", headers : {"Content-Type" : "application/json"}});
+            const apiAuthorFetch = await fetch(`${myAPi}view-author/${id}`, {method : "GET", headers : {"Content-Type" : "application/json"}});
             const apiData = await apiAuthorFetch.json();
             setAuthorForPosts((prevData)=>{
                 return ([
@@ -72,7 +72,7 @@ export default function Home(){
     }
 
     async function getUser(){
-        const apiCall = await fetch("https://blog-api-odin-52edb7119820.herokuapp.com/api/view-user",{ method : 'GET', headers : {'Content-Type' : 'application/json', 'authorization' : `Bearer ${JSON.parse(currentToken)}`} });
+        const apiCall = await fetch(`${myAPi}view-user`,{ method : 'GET', headers : {'Content-Type' : 'application/json', 'authorization' : `Bearer ${JSON.parse(currentToken)}`} });
         const response = await apiCall.json();
         if(apiCall.status === 200){
             const userId = response.id
@@ -84,7 +84,7 @@ export default function Home(){
 
     async function giveAccessToDeleteComment(id){
         try{
-            const commentAuth = await fetch(`https://blog-api-odin-52edb7119820.herokuapp.com/api/view-comment-author`, {method : "POST", headers: {'Content-Type': 'application/json'}, body : JSON.stringify({author_id : id})})
+            const commentAuth = await fetch(`${myAPi}view-comment-author`, {method : "POST", headers: {'Content-Type': 'application/json'}, body : JSON.stringify({author_id : id})})
             const response = await commentAuth.json();
             const userIdFromComment = response.check[0].user;
             const acutalUserId =  await getUser();
@@ -101,7 +101,7 @@ export default function Home(){
     async function deleteComment(commentId){
         try{
             console.log(currentToken, commentId)
-            const deleteCommentCall = await fetch('https://blog-api-odin-52edb7119820.herokuapp.com/api/delete-comment', {method : "POST", headers: {'Content-Type': 'application/json', 'authorization' : `Bearer ${JSON.parse(currentToken)}`}, body : JSON.stringify({id : commentId})});
+            const deleteCommentCall = await fetch(`${myAPi}delete-comment`, {method : "POST", headers: {'Content-Type': 'application/json', 'authorization' : `Bearer ${JSON.parse(currentToken)}`}, body : JSON.stringify({id : commentId})});
             const response = await deleteCommentCall.json();
             const filteredComments = commentsFromAPI.filter(comment => comment._id !== commentId);
             setCommentsFromAPI((prevData)=>{

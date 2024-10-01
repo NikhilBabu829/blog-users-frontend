@@ -4,12 +4,14 @@ import NavBar from "../../components/NavBar";
 
 export default function RegisterUser(){
 
+    const myAPI = import.meta.env.VITE_API_REQUEST;
+
     const [formData, setFormData] = useState({});
     const [displaySnackBar, setSnackBar] = useState(false);
 
     async function handleSubmit(){
         if(Object.keys(formData).length > 0){
-            const apiCall = await fetch("https://blog-api-odin-52edb7119820.herokuapp.com/api/user-sign-up",{method : 'POST', headers : {'Content-Type' : 'application/json'},body : JSON.stringify(formData)})
+            const apiCall = await fetch(`${myAPI}user-sign-up`,{method : 'POST', headers : {'Content-Type' : 'application/json'},body : JSON.stringify(formData)})
             const response = await apiCall.json()
             setSnackBar(true)
         }

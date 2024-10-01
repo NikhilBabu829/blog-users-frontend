@@ -6,13 +6,15 @@ import { Link, redirect, useNavigate, useParams } from 'react-router-dom';
 
 export default function CreateComment(){
 
+    const myAPI = import.meta.env.VITE_API_REQUEST;
+
     const { currentToken } = useContext(ContextProvider); 
     const {id} = useParams();
     const [comment_content, setCommentContent] = useState({});
     const navigate = useNavigate();
 
     async function MakeAPICall(){
-        const apiCall = await fetch("https://blog-api-odin-52edb7119820.herokuapp.com/api/create-comment", {method : "POST", headers: {'Content-Type': 'application/json', authorization: `Bearer ${JSON.parse(currentToken)}`}, body : JSON.stringify({comment_content : comment_content.comment_content, postId : id})})
+        const apiCall = await fetch(`${myAPI}create-comment`, {method : "POST", headers: {'Content-Type': 'application/json', authorization: `Bearer ${JSON.parse(currentToken)}`}, body : JSON.stringify({comment_content : comment_content.comment_content, postId : id})})
         const response = await apiCall.json();
         navigate("/home");
     }

@@ -3,6 +3,9 @@ import { createContext, useEffect, useState } from "react";
 export const ContextProvider = createContext(); 
 
 export default function Context({children}){
+
+    const myAPI = import.meta.env.VITE_API_REQUEST;
+
     const [currentUser, setCurrentUser] = useState({});
     const [currentToken, setCurrentToken] = useState();
     const [isStillLoggedIn, setIsStillLoggedIn] = useState(false);
@@ -40,7 +43,7 @@ export default function Context({children}){
     }
 
     async function keepUserLoggedIn(){
-        const apiCall = await fetch("https://blog-api-odin-52edb7119820.herokuapp.com/api/view-user",{ method : 'GET', headers : {'Content-Type' : 'application/json', 'authorization' : `Bearer ${JSON.parse(user)}`} });
+        const apiCall = await fetch(`${myAPI}view-user`,{ method : 'GET', headers : {'Content-Type' : 'application/json', 'authorization' : `Bearer ${JSON.parse(user)}`} });
         const response = await apiCall.json();
         if(response.username){
             localStorage.setItem("user", user);

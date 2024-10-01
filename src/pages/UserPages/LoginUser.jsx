@@ -8,6 +8,8 @@ CircularProgress
 
 export default function LoginUser(){
 
+    const myAPI = import.meta.env.VITE_API_REQUEST;
+
     const [formData, setFormData] = useState({});
     const [displaySnackBar, setSnackBar] = useState(false);
     const { currentUser, updateToken, changeLoggedInStatus, updateUser, updateDisplayDelete } = useContext(ContextProvider)
@@ -18,7 +20,7 @@ export default function LoginUser(){
         localStorage.removeItem("user");
         if(Object.keys(formData).length > 0){
             try{
-                const apiCall = await fetch("https://blog-api-odin-52edb7119820.herokuapp.com/api/user-login",{method : 'POST', headers : {'Content-Type' : 'application/json'},body : JSON.stringify(formData)})
+                const apiCall = await fetch(`${myAPI}user-login`,{method : 'POST', headers : {'Content-Type' : 'application/json'},body : JSON.stringify(formData)})
                 const response = await apiCall.json();
                 localStorage.setItem("user", JSON.stringify(response.token));
                 changeLoggedInStatus(true);
